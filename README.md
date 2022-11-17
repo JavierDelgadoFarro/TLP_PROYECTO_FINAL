@@ -1,5 +1,5 @@
 # DA_PROYECTO_FINAL
-CURSO: Taller de desarrollo de aplicaciones móviles 
+CURSO: Taller de lenguajes de programación 
 
 INTEGRANTES:
 
