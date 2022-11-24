@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Almacen";
+    Layout = "~/Views/Shared/MasterPage.cshtml";
+}
+
+ Almacén
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form>
+
+                <div class="form-group">
+                    <label for="alm_cat" class="control-label">Catería de Almacén</label>
+                    <select class="form-control" id="alm_cat">
+                        <option>Fierros</option>
+                        <option>Herramientas</option>
+                        <option>Cementos</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="alm_nomb" class="control-label">Nombre del Almacén</label>
+                    <input type="text" class="form-control" id="alm_nomb" name="alm_nomb">
+                </div>
+
+                <div class="form-group">
+                    <label for="alm_dir" class="control-label">Dirección</label>
+                    <input type="text" class="form-control" id="alm_dir" name="alm_dir">
+                </div>
+
+                <div class="form-group">
+                    <label for="alm_cap" class="control-label">Capacidad</label>
+                    <input type="number" class="form-control" id="alm_cap" name="alm_cap">
+                </div>
+                <div class="form-group">
+                    <label for="alm_area" class="control-label">Área</label>
+                    <input type="number" class="form-control" id="alm_area" name="alm_area">
+                </div>
+
+                <div class="form-group">
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                    <button type="button" class="btn btn-danger">Cancelar</button>
+                </div>
+        </div>
+    </div>
+    </form>
+

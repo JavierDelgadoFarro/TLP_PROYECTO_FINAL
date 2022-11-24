@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "Empleados";
+    Layout = "~/Views/Shared/MasterPage.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form>
+
+                <div class="form-group">
+                    <!-- Full Name -->
+                    <label for="emp_nombre" class="control-label">Nombres del empleado</label>
+                    <input type="text" class="form-control" id="emp_nombre" name="emp_nombre" placeholder="John Deer">
+                </div>
+
+                <div class="form-group">
+                    <!-- Street 1 -->
+                    <label for="emp_apellido" class="control-label">Apellidos</label>
+                    <input type="text" class="form-control" id="emp_apellido" name="emp_apellido" placeholder="Street address, P.O. box, company name, c/o">
+                </div>
+
+                <div class="form-group">
+                    <!-- Street 2 -->
+                    <label for="emp_dni" class="control-label">DNI</label>
+                    <input type="text" class="form-control" id="emp_dni" name="emp_dni" placeholder="70707070">
+                </div>
+
+                <div class="form-group">
+                    <!-- City-->
+                    <label for="emp_fecha" class="control-label">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" id="emp_fecha" name="emp_fecha" placeholder="22/11/2022">
+                </div>
+
+                <div class="form-group">
+                    <!-- State Button -->
+                    <label for="state_id" class="control-label">State</label>
+                    <select class="form-control" id="tip_nombre">
+                        <option value="ACT">Activo</option>
+                        <option value="INA">Inactivo</option>
+                        <option value="REC">Recurrente</option>
+                        <option value="TEM">Temporal</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                    <button type="button" class="btn btn-danger">Cancelar</button>
+                </div>
+        </div>
+    </div>
+    </form>
+
