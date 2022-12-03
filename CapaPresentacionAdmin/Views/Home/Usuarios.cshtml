@@ -4,47 +4,181 @@
     Layout = "~/Views/Shared/MasterPage.cshtml";
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <form>
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item"><a href="index.html">Resumen</a></li>
+    <li class="breadcrumb-item active">Usuarios</li>
+</ol>
 
-                <div class="form-group">
-                    <label for="usu_emp" class="control-label">Empleado</label>
-                    <select class="form-control" id="usu_emp">
-                        <option>Javier Delgado</option>
-                        <option>Jennifer Coronado</option>
-                        <option>Harvy Albarrán</option>
-                        <option>Jesenia Sempertegui</option>
-                    </select>
-                </div>
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-users me-1"></i>  Lista de Usuarios
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crear nuevo</button>
+            </div>
+        </div>
+        <hr />
+        <table id="tabla" class="display cell-border" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-                <div class="form-group">
-                    <label for="usu_nomb" class="control-label">Nombre de Usuario</label>
-                    <input type="text" class="form-control" id="usu_nomb" name="usu_nomb">
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body g-2">
 
-                <div class="form-group">
-                    <label for="usu_pass" class="control-label">Contraseña</label>
-                    <input type="password" class="form-control" id="usu_pass" name="usu_pass">
-                </div>
+                <input id="txtid" type="text" value="0" />
 
-                <div class="form-group">
-                    <label for="usu_tip" class="control-label">Tipo de Usuario</label>
-                    <select class="form-control" id="usu_tip">
-                        <option>Administrador</option>
-                        <option>Jefe de almacén</option>
-                        <option>Almacenero</option>
-                        <option>encargado de ordenamiento</option>
-                    </select>
-                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label for="txtnombres" class="form-label">Nombres</label>
+                        <input type="text" class="form-control" id="txtnombres">
+                    </div>
 
-                <div class="form-group">
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary">Registrar</button>
-                    <button type="button" class="btn btn-danger">Cancelar</button>
+                    <div class="col-sm-6">
+                        <label for="txtapellidos" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="txtapellidos">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="txtcorreo" class="form-label">Correo</label>
+                        <input type="text" class="form-control" id="txtcorreo">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="cboactivo" class="form-label">Estado</label>
+                        <select class="form-select" id="cboactivo">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+                </div>
+            </div>
         </div>
     </div>
-    </form>
+</div>
 
+@section scripts{
+   <script>
+
+        var tabladata;
+        var filaSeleccionada;
+
+        tabladata = $("#tabla").DataTable({
+            responsive: true,
+            ordering: false,
+            "ajax": {
+                url: '@Url.Action("ListarUsuarios", "Home" )',
+                type: "GET",
+                dataType: "json"
+            },
+            "columns": [
+                { "data": "Usu_nombres" },
+                { "data": "Usu_apellidos" },
+                { "data": "Usu_correo" },
+                {
+                    "data": "Usu_estado", "render": function (valor) {
+                        if (valor) {
+                            return  '<span class="badge bg-success">Activo</span>'
+                        } else {
+                            return '<span class="badge bg-danger">Inactivo</span>'
+                        }
+                    }
+                },
+                {
+                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+                        '<button type="button" class="btn btn-danger btn-sm ms-2"><i class="fas fa-trash"></i></button>',
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "90px"
+                }
+            ],
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json"
+            }
+        });
+
+        function abrirModal(json) {
+
+            $("#txtid").val("0");
+            $("#txtnombres").val("");
+            $("#txtapellidos").val("");
+            $("#txtcorreo").val("");
+            $("#cboactivo").val(1);
+
+            if (json != null) {
+
+                $("#txtid").val(json.idUsuario);
+                $("#txtnombres").val(json.Usu_nombres);
+                $("#txtapellidos").val(json.Usu_apellidos);
+                $("#txtcorreo").val(json.Usu_correo);
+                $("#cboactivo").val(json.Usu_estado == true ? 1 : 0);
+            }
+
+            $("#FormModal").modal("show");
+        }
+
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+
+            filaSeleccionada = $(this).closest("tr");
+
+            var data = tabladata.row(filaSeleccionada).data();
+
+            console.log(data)
+
+            abrirModal(data)
+
+
+        })
+
+        function Guardar() {
+
+            var Usuario = {
+
+                idUsuario: $("#txtid").val(),
+                Usu_nombres: $("#txtnombres").val(),
+                Usu_apellidos: $("#txtapellidos").val(),
+                Usu_correo: $("#txtcorreo").val(),
+                Usu_estado: $("#cboactivo").val() == 1 ? true : false,
+
+            }
+
+            if (Usuario.idUsuario == 0) {
+
+                tabladata.row.add(Usuario).draw(false);
+
+            } else {
+
+                tabladata.row(filaSeleccionada).data(Usuario).draw(false);
+
+            }
+
+            $("#FormModal").modal("hide");
+
+        }
+
+
+   </script>
+}
