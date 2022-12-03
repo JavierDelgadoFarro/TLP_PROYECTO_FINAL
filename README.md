@@ -6,3 +6,4 @@ INTEGRANTES:
 -Albarrán Salazar Harvy
 -Delgado Farro Javier
 -Diaz Coronado Jenniffer 
+-Sempertegui Bereche Jesenia
