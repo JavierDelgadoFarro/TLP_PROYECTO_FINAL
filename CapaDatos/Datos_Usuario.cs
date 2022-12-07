@@ -62,11 +62,11 @@ namespace CapaDatos
                 {
                     
                     SqlCommand cmd = new SqlCommand("SP_RegistrarUsuario", oconexion);
-                    cmd.Parameters.AddWithValue("Usu_nombres", obj.Usu_nombres);
-                    cmd.Parameters.AddWithValue("Usu_apellidos", obj.Usu_apellidos);
-                    cmd.Parameters.AddWithValue("Usu_correo", obj.Usu_correo);
-                    cmd.Parameters.AddWithValue("Usu_password", obj.Usu_password);
-                    cmd.Parameters.AddWithValue("Usu_estado", obj.Usu_estado);
+                    cmd.Parameters.AddWithValue("@nombres", obj.Usu_nombres);
+                    cmd.Parameters.AddWithValue("@apellidos", obj.Usu_apellidos);
+                    cmd.Parameters.AddWithValue("@correo", obj.Usu_correo);
+                    cmd.Parameters.AddWithValue("@clave", obj.Usu_password);
+                    cmd.Parameters.AddWithValue("@estado", obj.Usu_estado);
                     cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 200).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -103,10 +103,10 @@ namespace CapaDatos
 
                     SqlCommand cmd = new SqlCommand("SP_EditarUsuario", oconexion);
                     cmd.Parameters.AddWithValue("idUsuario", obj.idUsuario);
-                    cmd.Parameters.AddWithValue("Usu_nombres", obj.Usu_nombres);
-                    cmd.Parameters.AddWithValue("Usu_apellidos", obj.Usu_apellidos);
-                    cmd.Parameters.AddWithValue("Usu_correo", obj.Usu_correo);
-                    cmd.Parameters.AddWithValue("Usu_estado", obj.Usu_estado);
+                    cmd.Parameters.AddWithValue("@nombres", obj.Usu_nombres);
+                    cmd.Parameters.AddWithValue("@apellidos", obj.Usu_apellidos);
+                    cmd.Parameters.AddWithValue("@correo", obj.Usu_correo);
+                    cmd.Parameters.AddWithValue("@estado", obj.Usu_estado);
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 200).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;

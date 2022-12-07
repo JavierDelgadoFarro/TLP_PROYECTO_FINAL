@@ -10,3 +10,9 @@ D:\D\X-CICLO\LENGUAJES DE PROGRAMACIÓN\Sistema_Jhayli\CapaEntidad\obj\Debug\Cap
 D:\D\X-CICLO\LENGUAJES DE PROGRAMACIÓN\Sistema_Jhayli\CapaEntidad\obj\Debug\CapaEntidad.csproj.CoreCompileInputs.cache
 D:\D\X-CICLO\LENGUAJES DE PROGRAMACIÓN\Sistema_Jhayli\CapaEntidad\obj\Debug\CapaEntidad.dll
 D:\D\X-CICLO\LENGUAJES DE PROGRAMACIÓN\Sistema_Jhayli\CapaEntidad\obj\Debug\CapaEntidad.pdb
+D:\CICLO 9\TALLER DE LENGUAJES DE PROGRAMACION\PROYECTO C#\TLP_PROYECTO_FINAL\CapaEntidad\bin\Debug\CapaEntidad.dll
+D:\CICLO 9\TALLER DE LENGUAJES DE PROGRAMACION\PROYECTO C#\TLP_PROYECTO_FINAL\CapaEntidad\bin\Debug\CapaEntidad.pdb
+D:\CICLO 9\TALLER DE LENGUAJES DE PROGRAMACION\PROYECTO C#\TLP_PROYECTO_FINAL\CapaEntidad\obj\Debug\CapaEntidad.csproj.AssemblyReference.cache
+D:\CICLO 9\TALLER DE LENGUAJES DE PROGRAMACION\PROYECTO C#\TLP_PROYECTO_FINAL\CapaEntidad\obj\Debug\CapaEntidad.csproj.CoreCompileInputs.cache
+D:\CICLO 9\TALLER DE LENGUAJES DE PROGRAMACION\PROYECTO C#\TLP_PROYECTO_FINAL\CapaEntidad\obj\Debug\CapaEntidad.dll
+D:\CICLO 9\TALLER DE LENGUAJES DE PROGRAMACION\PROYECTO C#\TLP_PROYECTO_FINAL\CapaEntidad\obj\Debug\CapaEntidad.pdb
