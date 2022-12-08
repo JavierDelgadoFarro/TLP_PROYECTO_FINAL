@@ -37,9 +37,7 @@ namespace CapaNegocio
             if (string.IsNullOrEmpty(Mensaje))
             {
 
-
-
-                string clave = "test123";
+                string clave = CN_Recursos.GenerarClave();
                 obj.Usu_password = CN_Recursos.ConvertirSha256(clave);
 
                 return objCapaDato.Registrar(obj, out Mensaje);
@@ -77,12 +75,12 @@ namespace CapaNegocio
             {
                 return false;
             }
-
         }
 
         public bool Eliminar(int id, out string Mensaje)
         {
             return objCapaDato.Eliminar(id, out Mensaje);
         }
+
     }
 }
