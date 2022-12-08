@@ -5,10 +5,19 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Net.Mail;
+using System.Net;
+using System.IO;
+
 namespace CapaNegocio
 {
     public class CN_Recursos
     {
+        public static string GenerarClave()
+        {
+            string clave = Guid.NewGuid().ToString("N").Substring(0, 6);
+            return clave;
+        }
 
         //encriptar en SHA256
         public static string ConvertirSha256(string texto)
@@ -26,7 +35,5 @@ namespace CapaNegocio
 
             return Sb.ToString();
         }
-
-
     }
 }

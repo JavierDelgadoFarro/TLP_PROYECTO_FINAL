@@ -1,0 +1,156 @@
+ -----USUARIO
+/******************REGISTRAR USUARIO********************************/
+CREATE PROCEDURE [dbo].[SP_RegistrarUsuario](
+	 @nombres VARCHAR(100),
+	 @apellidos VARCHAR(100),
+	 @correo VARCHAR(100),
+	 @clave VARCHAR(150),
+	 @estado BIT,
+	 @mensaje VARCHAR(200) OUTPUT,
+	 @resultado INT OUTPUT
+ )
+ AS
+ BEGIN
+	SET @resultado = 0
+	IF NOT EXISTS (SELECT * FROM Usuario WHERE Usu_correo = @correo)
+	BEGIN
+		INSERT INTO Usuario (Usu_nombres, Usu_apellidos, Usu_correo, Usu_password, Usu_estado) 
+		VALUES (@nombres, @apellidos, @correo, @clave, @estado)
+		SET @resultado = SCOPE_IDENTITY()
+	END
+	ELSE
+		SET @mensaje = 'El correo del usuario ya existe'
+ END
+
+/******************EDITAR USUARIO*************************************/
+CREATE PROCEDURE [dbo].[SP_EditarUsuario](
+	 @idUsuario INT,
+	 @nombres VARCHAR(100),
+	 @apellidos VARCHAR(100),
+	 @correo VARCHAR(100),
+	 @estado BIT,
+	 @mensaje VARCHAR(200) OUTPUT,
+	 @resultado BIT OUTPUT
+ )
+ AS
+ BEGIN
+	SET @resultado = 0
+	IF NOT EXISTS (SELECT * FROM Usuario WHERE Usu_correo = @correo AND idUsuario != @idUsuario)
+	BEGIN
+		UPDATE TOP (1) Usuario SET 
+		Usu_nombres = @nombres, 
+		Usu_apellidos = @apellidos, 
+		Usu_correo = @correo,
+		Usu_estado = @estado
+		WHERE idUsuario = @idUsuario
+		
+		SET @resultado = 1
+	END
+	ELSE
+		SET @mensaje = 'El correo del usuario ya existe'
+ END
+
+/******************LISTAR USUARIO*************************************/
+CREATE PROCEDURE [dbo].[SP_ListarUsuario]
+ AS 
+ BEGIN
+select idUsuario,Usu_nombres,Usu_apellidos,Usu_correo,Usu_password,Usu_reestablecer,Usu_estado from Usuario  
+where Usu_estado = 1
+END
+
+
+/******************ELIMINAR USUARIO*************************************/
+
+CREATE PROCEDURE [dbo].[SP_EliminarUsuario](
+
+@IdUsuario int,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado=0
+	SELECT * FROM Usuario WHERE idUsuario = @IdUsuario
+	BEGIN
+		DELETE TOP (1) FROM Usuario WHERE idUsuario = @IdUsuario
+		SET @Resultado =1
+	END
+END
+
+---CATEGORIA
+
+/******************REGISTRAR CATEGORIA*************************************/
+CREATE PROCEDURE [dbo].[SP_RegistrarCategoria](
+@Descripcion varchar(100),
+@Activo bit,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado=0
+	IF NOT EXISTS (SELECT * FROM CATEGORIA WHERE Cat_Descripcion = @Descripcion)
+	BEGIN
+		INSERT INTO CATEGORIA(Cat_Descripcion,Cat_estado) values
+		(@Descripcion, @Activo)
+		
+		SET @Resultado = scope_identity()
+	END
+	ELSE
+	SET @Mensaje = 'La categoría ya existe'
+END
+
+/******************EDITAR CATEGORIA*************************************/
+
+CREATE PROCEDURE [dbo].[SP_EditarCategoria](
+@IdCategoria int,
+@Descripcion varchar(100),
+@Activo bit,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado=0
+	IF NOT EXISTS (SELECT * FROM CATEGORIA WHERE Cat_Descripcion = @Descripcion AND idCategoria != @IdCategoria)
+	BEGIN
+		UPDATE top (1) CATEGORIA SET
+		Cat_descripcion = @Descripcion,
+		Cat_estado = @Activo
+		WHERE idCategoria = @IdCategoria
+		SET @Resultado = 1
+	END
+	ELSE
+	SET @Mensaje = 'La categoría ya existe'
+END
+/******************ELIMINAR CATEGORIA*************************************/
+CREATE PROCEDURE [dbo].[SP_EliminarCategoria](
+@IdCategoria int,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado=0
+	IF NOT EXISTS (SELECT * FROM PRODUCTO P
+	INNER JOIN CATEGORIA C ON C.idCategoria = P.idCategoria
+	
+	WHERE P.IdCategoria = @IdCategoria)
+	BEGIN
+		DELETE TOP (1) FROM Categoria WHERE idCategoria = @IdCategoria
+		SET @Resultado =1
+	END
+	ELSE
+	SET @Mensaje = 'La categoría se encuentra relacionada a un producto'
+END
+/******************LISTAR CATEGORIA*************************************/
+CREATE PROCEDURE [dbo].[SP_ListarCategoria]
+ AS 
+ BEGIN
+select idCategoria,Cat_descripcion,Cat_estado from Categoria  
+where Cat_estado = 1
+END
+
+
+
+
