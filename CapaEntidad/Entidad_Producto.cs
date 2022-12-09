@@ -14,10 +14,6 @@ namespace CapaEntidad
 
         public string Prod_descripcion { get; set; }
 
-        public Entidad_Marca idMarca { get; set; }
-
-        public Entidad_Categoria idCategoria { get; set; }
-
         public decimal Prod_precio { get; set; }
 
         public int Prod_stock { get; set; }
@@ -27,7 +23,14 @@ namespace CapaEntidad
         public string Prod_nombreImagen { get; set; }
 
         public bool Prod_estado { get; set; }
+        public Entidad_Marca oMarca { get; set; }
+        public Entidad_Categoria oCategoria { get; set; }
 
+        public string PrecioTexto { get; set; }
+
+        //para cadena de imagen
+        public string Base64 { get; set; }
+        public string Extension { get; set; }
     }
 }
 
