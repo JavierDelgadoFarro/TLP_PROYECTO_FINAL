@@ -152,5 +152,192 @@ where Cat_estado = 1
 END
 
 
+/******************REGISTRAR MARCA*************************************/
 
+CREATE PROCEDURE [dbo].[SP_RegistrarMarca](
+@Descripcion varchar(100),
+@Activo bit,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado=0
+	IF NOT EXISTS (SELECT * FROM MARCA WHERE Mar_descripcion = @Descripcion)
+	BEGIN
+		INSERT INTO MARCA(Mar_descripcion,Mar_estado) values
+		(@Descripcion, @Activo)
+		
+		SET @Resultado = scope_identity()
+	END
+	ELSE
+	SET @Mensaje = 'La marca ya existe'
+END
+
+/******************EDITAR MARCA*************************************/
+
+CREATE PROCEDURE [dbo].[SP_EditarMarca](
+@IdMarca int,
+@Descripcion varchar(100),
+@Activo bit,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado=0
+	IF NOT EXISTS (SELECT * FROM Marca WHERE Mar_descripcion = @Descripcion AND idMarca != @IdMarca)
+	BEGIN
+		UPDATE top (1) MARCA SET
+		Mar_descripcion = @Descripcion,
+		Mar_estado = @Activo
+		WHERE idMarca = @idMarca
+		SET @Resultado = 1
+	END
+	ELSE
+	SET @Mensaje = 'La marca ya existe'
+END
+
+/******************ELIMINAR MARCA*************************************/
+CREATE PROCEDURE [dbo].[SP_EliminarMarca](
+@IdMarca int,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado=0
+	IF NOT EXISTS (SELECT * FROM PRODUCTO P
+	INNER JOIN MARCA M ON M.idMarca = P.idMarca
+	
+	WHERE P.idMarca = @IdMarca)
+	BEGIN
+		DELETE TOP (1) FROM MARCA WHERE idMarca = @IdMarca
+		SET @Resultado =1
+	END
+	ELSE
+	SET @Mensaje = 'La marca se encuentra relacionada a un producto'
+END
+
+/******************LISTAR MARCA*************************************/
+CREATE PROCEDURE [dbo].[SP_ListarMarca]
+ AS 
+ BEGIN
+select idMarca,Mar_descripcion,Mar_estado from Marca  
+where Mar_estado = 1
+END
+
+/******************REGISTRAR PRODUCTO*************************************/
+
+CREATE PROCEDURE SP_RegistrarProducto(
+@Nombre varchar(100),
+@Descripcion varchar (100),
+@IdMarca varchar(100),
+@IdCategoria varchar (100),
+@Precio decimal(10,2),
+@Stock int,
+@Activo bit,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado =0
+	IF NOT EXISTS ( SELECT*FROM Producto WHERE Prod_nombre = @Nombre)
+	BEGIN
+		INSERT INTO Producto(Prod_nombre, Prod_descripcion, Prod_idMarca, Prod_idCategoria, Prod_precio, Prod_stock, Prod_estado) VALUES
+		(@Nombre,@Descripcion,@IdMarca,@IdCategoria,@Precio,@Stock,@Activo)
+		SET @Resultado = SCOPE_IDENTITY()
+	END
+	ELSE
+	SET @Mensaje = 'El Producto ya existe'
+END
+
+/******************EDITAR PRODUCTO*************************************/
+
+CREATE PROCEDURE SP_EditarProducto(
+@IdProducto int,
+@Nombre varchar(100),
+@Descripcion varchar (100),
+@IdMarca varchar(100),
+@IdCategoria varchar (100),
+@Precio decimal(10,2),
+@Stock int,
+@Activo bit,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado =0
+	IF NOT EXISTS ( SELECT*FROM Producto WHERE Prod_nombre = @Nombre AND idProducto != @IdProducto)
+	BEGIN
+		UPDATE Producto SET 
+		@Nombre = Prod_nombre, 
+		@Descripcion = Prod_descripcion, 
+		@IdMarca = Prod_idMarca, 
+		@IdCategoria = Prod_idCategoria, 
+		@Precio = Prod_precio, 
+		@Stock = Prod_stock, 
+		@Activo = Prod_estado
+		WHERE idProducto = @IdProducto
+
+		SET @Resultado = 1
+	END
+	ELSE
+	SET @Mensaje = 'El Producto ya existe'
+END
+
+
+/******************ELIMINAR PRODUCTO*************************************/
+
+CREATE PROCEDURE [dbo].[SP_EliminarProducto](
+@IdProducto int,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado=0
+	IF NOT EXISTS (SELECT * FROM DetalleVenta DV
+	INNER JOIN Producto P ON P.idProducto = DV.idProducto
+	
+	WHERE P.idProducto = @IdProducto)
+	BEGIN
+		DELETE TOP (1) FROM PRODUCTO WHERE idProducto = @IdProducto
+		SET @Resultado =1
+	END
+	ELSE
+	SET @Mensaje = 'El Producto se encuentra relacionado a una venta'
+END
+
+
+/******************LISTAR PRODUCTO*************************************/
+
+CREATE PROCEDURE [dbo].[SP_ListarProducto]
+ AS 
+ BEGIN
+select P.idProducto,P.Prod_nombre,P.Prod_descripcion, m.idMarca,
+m.Mar_descripcion[DesMarca],
+c.idCategoria, c.Cat_descripcion[DesCategoria],
+P.Prod_precio, p.Prod_stock, p.Prod_rutaImagen, P.Prod_nombreImagen, P.Prod_estado
+from Producto P
+INNER JOIN Marca m ON m.idMarca = p.Prod_idMarca
+INNER JOIN Categoria C ON C.idCategoria = P.Prod_idCategoria
+WHERE Prod_estado =1
+END
+
+/******************REGISTRAR IMAGEN PRODUCTO*************************************/
+
+CREATE PROCEDURE SP_RegistrarImagen
+(
+@IdProducto int,
+@Rutaimagen varchar(500) output,
+@Nombreimagen int output
+)
+AS
+BEGIN
+UPDATE Producto SET Prod_rutaImagen= @Rutaimagen, Prod_nombreImagen= @Nombreimagen
+WHERE idProducto = @IdProducto
+END
 
