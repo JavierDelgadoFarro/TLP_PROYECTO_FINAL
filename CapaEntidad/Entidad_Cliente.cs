@@ -16,7 +16,8 @@ namespace CapaEntidad
 
         public string Cli_correo { get; set; }
 
-        public string Cli_contrasena { get; set; }
+        public string Cli_password { get; set; }
+        public string Cli_confirmarPass { get; set; }
 
         public bool Cli_reestablecer { get; set; }
 

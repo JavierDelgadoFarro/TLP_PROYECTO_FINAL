@@ -7,8 +7,6 @@ using System.Web.Security;
 using CapaEntidad;
 using CapaNegocio;
 
-//requerir acceso
-using System.Web.Security;
 
 namespace CapaPresentacionAdmin.Controllers
 {
