@@ -126,20 +126,19 @@
 @section scripts{
 
     <script>
+    jQuery.ajax({
+    url: '@Url.Action("VistaDashboard", "Home")',
+    type: "GET",
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
+    success: function (data) {
+        var objeto = data.resultado;
+        $("#totalcliente").text(objeto.TotalCliente)
+        $("#totalventa").text(objeto.TotalVenta)
+        $("#totalproducto").text(objeto.TotalProducto)
 
-             jQuery.ajax({
-                url: '@Url.Action("VistaDashboard", "Home")',
-                type: "GET",
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    var objeto = data.resultado;
-                    $("#totalcliente").text(objeto.TotalCliente)
-                    $("#totalventa").text(objeto.TotalVenta)
-                    $("#totalproducto").text(objeto.TotalProducto)
-
-                }
-             });
+    }
+    });
  
     </script>
 }
