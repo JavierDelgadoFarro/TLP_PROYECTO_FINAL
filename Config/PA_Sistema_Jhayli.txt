@@ -341,3 +341,14 @@ UPDATE Producto SET Prod_rutaImagen= @Rutaimagen, Prod_nombreImagen= @Nombreimag
 WHERE idProducto = @IdProducto
 END
 
+/******************REPORTE COUNT DE CLIENTES VENTAS Y PRODUCTOS*************************************/
+
+CREATE PROCEDURE SP_ReporteDashboard
+AS
+BEGIN
+SELECT
+	(SELECT COUNT(*) FROM cliente)[TotalCliente],
+	(SELECT ISNULL(sum(DV_Cantidad),0) from DetalleVenta) [TotalVenta],
+	(SELECT COUNT (*) FROM PRODUCTO)[TotalProducto]
+END
+EXEC SP_ReporteDashboard

@@ -19,7 +19,7 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("SP_ListarMarca", oconexion);
-                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandType = CommandType.StoredProcedure;
                     oconexion.Open();
                     using (SqlDataReader dr = cmd.ExecuteReader())
                     {
