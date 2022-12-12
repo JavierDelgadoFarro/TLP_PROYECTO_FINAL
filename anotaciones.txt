@@ -3,3 +3,6 @@ línea 15: 	<add key="ServidorFotos" value="C:\Users\Javier\Desktop\img_proyecto
 
 en la base de datos: para la tabla producto se modificó el nombre de los cmapos de idmarca a Prod_idMarca y categoria: Prod_idCategoria
 donde se establece la cadena de conexion a base de dato en es web.config
+
+asignación de la base de datos en el archivo web.config
+línea 8: <add name="cadena" providerName="System.Data.ProviderName" connectionString="Data Source=JAVIERDF\SQLEXPRESS;Initial Catalog=DB_JHAYLI;User ID=sistemas" />
