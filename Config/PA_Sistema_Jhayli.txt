@@ -352,3 +352,23 @@ SELECT
 	(SELECT COUNT (*) FROM PRODUCTO)[TotalProducto]
 END
 EXEC SP_ReporteDashboard
+
+/******************CAMBIAR CONTRASEÑA*************************************/
+
+CREATE PROC [dbo].[SP_CambiarContraseña](
+	 @id INT,
+	 @nuevaclave VARCHAR(100),
+	 @resultado BIT OUTPUT,
+	 @Mensaje varchar(500) output
+ )
+ AS
+ BEGIN
+	SET @resultado = 0
+	BEGIN
+		UPDATE TOP (1) Usuario SET 
+		Usu_password = @nuevaclave,
+		Usu_reestablecer =0
+		WHERE idUsuario = @id
+	END	
+		SET @resultado = 1
+END

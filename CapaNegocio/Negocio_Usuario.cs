@@ -36,10 +36,9 @@ namespace CapaNegocio
 
             if (string.IsNullOrEmpty(Mensaje))
             {
-
-                string clave = CN_Recursos.GenerarClave();
-                obj.Usu_password = CN_Recursos.ConvertirSha256(clave);
-
+                //string clave = CN_Recursos.GenerarClave();
+                // por defecto la primera contraseña es el nombre
+                obj.Usu_password = CN_Recursos.ConvertirSha256(obj.Usu_nombres);
                 return objCapaDato.Registrar(obj, out Mensaje);
             }
             else
@@ -81,6 +80,10 @@ namespace CapaNegocio
         {
             return objCapaDato.Eliminar(id, out Mensaje);
         }
+        public bool CambiarClave(int idusuario, string nuevaclave, out string Mensaje)
+        {
 
+            return objCapaDato.CambiarClave(idusuario, nuevaclave, out Mensaje);
+        }
     }
 }
