@@ -372,3 +372,80 @@ CREATE PROC [dbo].[SP_CambiarContraseña](
 	END	
 		SET @resultado = 1
 END
+
+/******************REGISTRAR CLIENTE*************************************/
+CREATE PROCEDURE SP_RegistrarCliente(
+@Nombres varchar(100),
+@Apellido varchar(100),
+@Correo varchar(100),
+@Clave varchar(100),
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado =0
+	IF NOT EXISTS (SELECT*FROM Cliente WHERE Cli_correo = @Correo)
+	BEGIN
+		INSERT INTO Cliente(Cli_nombres, Cli_apellidos, Cli_correo, Cli_password, Cli_reestablecer) values
+		(@Nombres, @Apellido, @Correo, @Clave, 0)
+		SET @Resultado = SCOPE_IDENTITY()
+	END
+	ELSE
+	SET @Mensaje = 'El correo del cliente ya existe'
+END
+
+/******************LISTAR CLIENTE*************************************/
+
+ CREATE PROC SP_ListarCliente
+ AS 
+ BEGIN
+select idCliente,Cli_nombres,Cli_apellidos,Cli_correo,Cli_password,Cli_reestablecer from Cliente  
+END
+
+/******************EDITAR CLIENTE*************************************/
+
+
+CREATE PROC [dbo].[SP_EditarCLiente](
+	 @idCliente INT,
+	 @nombres VARCHAR(100),
+	 @apellidos VARCHAR(100),
+	 @correo VARCHAR(100),
+	 @mensaje VARCHAR(200) OUTPUT,
+	 @resultado BIT OUTPUT
+ )
+ AS
+ BEGIN
+	SET @resultado = 0
+	IF NOT EXISTS (SELECT * FROM Cliente WHERE Cli_correo = @correo AND idCliente != @idCliente)
+	BEGIN
+		UPDATE TOP (1) Cliente SET 
+		Cli_nombres = @nombres, 
+		Cli_apellidos = @apellidos, 
+		Cli_correo = @correo
+		WHERE idCliente = @idCliente
+		
+		SET @resultado = 1
+	END
+	ELSE
+		SET @mensaje = 'El correo del cliente ya existe'
+ END
+
+
+/******************ELIMINAR CLIENTE*************************************/
+
+ CREATE PROC [dbo].[SP_EliminarCliente](
+
+@IdCliente int,
+@Mensaje varchar(500) output,
+@Resultado int output
+)
+AS
+BEGIN
+	SET @Resultado=0
+	SELECT * FROM Cliente WHERE idCliente = @IdCliente
+	BEGIN
+		DELETE TOP (1) FROM Usuario WHERE @IdCliente = @IdCliente
+		SET @Resultado =1
+	END
+END

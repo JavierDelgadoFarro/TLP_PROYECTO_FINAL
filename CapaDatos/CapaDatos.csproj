@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Conexion.cs" />
     <Compile Include="Datos_Categoria.cs" />
+    <Compile Include="Datos_Cliente.cs" />
     <Compile Include="Datos_Marca.cs" />
     <Compile Include="Datos_Producto.cs" />
     <Compile Include="Datos_Reporte.cs" />
