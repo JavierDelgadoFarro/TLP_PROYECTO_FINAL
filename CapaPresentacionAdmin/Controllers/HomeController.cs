@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 using CapaEntidad;
 using CapaNegocio;
 
@@ -15,7 +16,7 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();
         }
-
+        #region Usuarios
         public ActionResult Usuarios()
         {
             return View();
@@ -59,5 +60,15 @@ namespace CapaPresentacionAdmin.Controllers
 
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
+        #endregion
+
+        #region Reportes
+        [HttpGet]
+        public JsonResult VistaDashboard()
+        {
+            Entidad_DashBoard objeto = new Negocio_Reporte().VerDashBoard();
+            return Json(new { resultado = objeto}, JsonRequestBehavior.AllowGet);
+        }
+        #endregion  
     }
 }

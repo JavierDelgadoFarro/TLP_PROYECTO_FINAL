@@ -44,6 +44,7 @@
     <Compile Include="Entidad_Carrito.cs" />
     <Compile Include="Entidad_Categoria.cs" />
     <Compile Include="Entidad_Cliente.cs" />
+    <Compile Include="Entidad_DashBoard.cs" />
     <Compile Include="Entidad_Departamento.cs" />
     <Compile Include="Entidad_DetalleVenta.cs" />
     <Compile Include="Entidad_Distrito.cs" />

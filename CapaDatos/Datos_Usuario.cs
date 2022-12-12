@@ -12,8 +12,6 @@ namespace CapaDatos
 {
     public class Datos_Usuario
     {
-        
-
         public List<Entidad_Usuario> Listar()
         {
             List<Entidad_Usuario> lista = new List<Entidad_Usuario>();
