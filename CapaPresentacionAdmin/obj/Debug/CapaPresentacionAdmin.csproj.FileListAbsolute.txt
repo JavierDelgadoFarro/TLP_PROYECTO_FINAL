@@ -351,3 +351,4 @@ C:\Users\HP\OneDrive\Documentos\CICLO IX\LENGUAJES DE PROGRAMACIÓN\PROYECTO_JHA
 C:\Users\HP\OneDrive\Documentos\CICLO IX\LENGUAJES DE PROGRAMACIÓN\PROYECTO_JHAYLI\TLP_PROYECTO_FINAL\CapaPresentacionAdmin\obj\Debug\CapaPresentacionAdmin.csproj.CopyComplete
 C:\Users\HP\OneDrive\Documentos\CICLO IX\LENGUAJES DE PROGRAMACIÓN\PROYECTO_JHAYLI\TLP_PROYECTO_FINAL\CapaPresentacionAdmin\obj\Debug\CapaPresentacionAdmin.dll
 C:\Users\HP\OneDrive\Documentos\CICLO IX\LENGUAJES DE PROGRAMACIÓN\PROYECTO_JHAYLI\TLP_PROYECTO_FINAL\CapaPresentacionAdmin\obj\Debug\CapaPresentacionAdmin.pdb
+C:\Users\HP\OneDrive\Documentos\CICLO IX\LENGUAJES DE PROGRAMACIÓN\PROYECTO_JHAYLI\TLP_PROYECTO_FINAL\CapaPresentacionAdmin\bin\CapaPresentacionAdmin.dll.config

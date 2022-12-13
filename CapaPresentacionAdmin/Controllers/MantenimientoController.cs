@@ -18,10 +18,6 @@ namespace CapaPresentacionAdmin.Controllers
     public class MantenimientoController : Controller
     {
         // GET: Mantenimiento
-        public ActionResult Empleados()
-        {
-            return View();
-        }
 
         public ActionResult Marcas()
         {
