@@ -17,24 +17,17 @@ namespace CapaPresentacionCliente.Controllers
         {
             return View();
         }
-
-
-        public ActionResult DetalleProducto(int idproducto = 0)
+        public ActionResult DetalleProducto(int idProducto = 0)
         {
 
             Entidad_Producto oProducto = new Entidad_Producto();
             bool conversion;
-
-
-            oProducto = new Negocio_Producto().Listar().Where(p => p.idProducto == idproducto).FirstOrDefault();
-
-
+            oProducto = new Negocio_Producto().Listar().Where(p => p.idProducto == idProducto).FirstOrDefault();
             if (oProducto != null)
             {
                 oProducto.Base64 = CN_Recursos.ConvertirBase64(Path.Combine(oProducto.Prod_rutaImagen, oProducto.Prod_nombreImagen), out conversion);
                 oProducto.Extension = Path.GetExtension(oProducto.Prod_nombreImagen);
             }
-
             return View(oProducto);
         }
 
@@ -85,5 +78,32 @@ namespace CapaPresentacionCliente.Controllers
             jsonresult.MaxJsonLength = int.MaxValue;
             return jsonresult;
         }
-    }
+
+        [HttpPost]
+        public JsonResult AgregarCarrito(int idproducto)
+        {
+            int idCliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
+            bool existe = new Negocio_Carrito().ExistCarrito(idCliente, idproducto);
+
+            bool respuesta = false;
+            string mensaje = string.Empty;
+            if (existe)
+            {
+                mensaje = "El producto ya existe en el carrito";
+            }
+            else
+            {
+                respuesta = new Negocio_Carrito().OperacionCarrito(idCliente, idproducto, true, out mensaje);
+            }
+            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult CantidadEnCarrito()
+        {
+            int idCliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
+            int cantidad = new Negocio_Carrito().CantidadEnCarrito(idCliente);
+            return Json(new {cantidad = cantidad }, JsonRequestBehavior.AllowGet);
+
+        }
 }

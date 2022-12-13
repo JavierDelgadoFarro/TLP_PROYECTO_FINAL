@@ -149,8 +149,8 @@ namespace CapaDatos
                         {
                             lista.Add(new Entidad_Marca()
                             {
-                                idMarca = Convert.ToInt32(dr["IdMarca"]),
-                                Mar_descripcion = dr["Descripcion"].ToString()
+                                idMarca = Convert.ToInt32(dr["idMarca"]),
+                                Mar_descripcion = dr["Mar_descripcion"].ToString()
                             });
                         }
                     }

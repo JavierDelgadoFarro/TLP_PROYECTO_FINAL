@@ -474,7 +474,7 @@ SELECT
 	(SELECT COUNT (*) FROM PRODUCTO WHERE Producto.Prod_estado = 1)[TotalProducto] 
 END
 
-/******************LISTAR CLIENTE*************************************/
+/******************LISTAR MARCAS POR CATEGORIA*************************************/
 
 
 CREATE PROCEDURE SP_ListarMarcaCategoria(
@@ -487,4 +487,71 @@ SELECT DISTINCT m.idMarca, m.Mar_descripcion from Producto P
 INNER JOIN Categoria C ON C.idCategoria = P.Prod_idCategoria
 INNER JOIN Marca M ON M.idMarca = P.Prod_idMarca AND m.Mar_estado=1
 WHERE C.idCategoria = IIF(@idCategoria = 0, C.idCategoria, @idCategoria)
+END
+
+/******************VERIFICACION DE PRODUCTO EN CARRITO*************************************/
+
+CREATE PROC SP_ExisteCarrito(
+@IdCliente int,
+@IdProducto int,
+@Resultado BIT OUTPUT
+)
+AS
+BEGIN
+	IF EXISTS (SELECT * FROM Carrito WHERE idCarrito = @IdCliente AND Car_idProducto = @IdProducto)
+			SET @Resultado = 1
+	ELSE
+		SET @Resultado = 0
+END
+
+
+
+/*AÑADIR AL CARRITO/*
+
+CREATE PROCEDURE SP_OperacionCarrito(
+@IdCliente int,
+@IdProducto int,
+@Sumar BIT,
+@Mensaje varchar(500) output,
+@Resultado BIT OUTPUT
+)
+AS
+BEGIN
+	SET @Resultado = 1
+	SET @Mensaje = ''
+
+	DECLARE @existecarrito BIT = IIF (EXISTS(SELECT * FROM carrito WHERE Car_idCliente = @IdCliente AND Car_idProducto = @IdProducto),1,0)
+	DECLARE @stockproducto INT = (SELECT Prod_stock FROM Producto WHERE idProducto = @IdProducto)
+
+	BEGIN TRY
+
+	BEGIN TRANSACTION OPERACION
+		IF ( @Sumar =1)
+		BEGIN 
+			IF (@stockproducto > 0)
+				BEGIN
+				IF (@existecarrito = 1)
+					UPDATE carrito SET Car_cantidad = Car_cantidad +1 WHERE Car_idCliente = @IdCliente AND Car_idProducto = Car_idProducto
+				ELSE
+					INSERT INTO Carrito(Car_idCliente, Car_idProducto, Car_cantidad) VALUES (@IdCliente, @IdProducto, 1)
+				UPDATE Producto SET Prod_stock = Prod_stock -1 WHERE idProducto = @IdProducto
+				END
+			ELSE
+				BEGIN
+					SET @Resultado =0
+					SET @Mensaje = 'El producto no cuenta con stock suficiente'
+				END
+		END
+		ELSE
+		BEGIN
+			UPDATE Carrito SET Car_cantidad = Car_cantidad -1 WHERE Car_idCliente = @IdCliente AND Car_idProducto = @IdProducto
+			UPDATE Producto SET Prod_stock = Prod_stock +1 WHERE idProducto = @IdProducto
+		END
+		COMMIT TRANSACTION OPERACION
+	END TRY
+	BEGIN CATCH
+		SET @Resultado =0
+		SET @Mensaje = ERROR_MESSAGE()
+		ROLLBACK TRANSACTION OPERACION
+	END CATCH
 END
