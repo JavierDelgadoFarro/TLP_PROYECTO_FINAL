@@ -211,7 +211,7 @@
                                  $("<div>").addClass("card-footer p-2 pt-0 border-top-0 bg-transparent").append(
                                      $("<div>").addClass("d-grid gap-2").append(
                                          @if (Session["Cliente"] != null) {
-                                             @:$("<button>").addClass("btn btn-success mt-auto agregarcarrito").data("idProducto",element.idProducto).text("Agregar a carrito"),
+                                             @:$("<button>").addClass("btn btn-success mt-auto agregarcarrito").data("idproducto",element.idProducto).text("Agregar a carrito"),
                                          }
                                          $("<a>").addClass("btn btn-dark mt-auto")
                                              .attr({"href":"@Url.Action("DetalleProducto","Tienda")" + "?idProducto=" + element.idProducto})
@@ -236,33 +236,33 @@
         })
 
         $(document).on("click", "button.agregarcarrito", function () {
-            console.log($(this).data("idProducto"))
+            console.log($(this).data("idproducto"))
 
             jQuery.ajax({
-                    url: '@Url.Action("AgregarCarrito", "Tienda")',
-                    type: "POST",
-                    data: JSON.stringify({ idProducto: $(this).data("idProducto") }),
-                    dataType: "json",
-                    contenType: "application/json; charset=utf-8",
-                    success: function (data) {
-                        if (data.respuesta) {
-                            MostrarCantidadCarrito();
-                            swal({
-                                title: "Agregado al carrito",
-                                text: "¿Desea ir al carrito?",
-                                type: "succes",
-                                shoCancelButton: true,
-                                confirmButtonClass: "btn-primary",
-                                confirmButtonText: "Si",
-                                cancelButtonText: "No",
-                                closeOnConfirm: true
-                            }, function () {
-                                window.location.href = '@Url.Action("Carrito", "Tienda")'
-                            })
-                        } else {
-                            swal("", data.mensaje, "warning");
-                        }
+                url: '@Url.Action("AgregarCarrito", "Tienda")',
+                type: "POST",
+                data: JSON.stringify({ idproducto: $(this).data("idproducto") }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.respuesta) {
+                        MostrarCantidadCarrito();
+                        swal({
+                            title: "Agregado al carrito",
+                            text: "¿Desea ir al carrito?",
+                            type: "success",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-primary",
+                            confirmButtonText: "Si",
+                            cancelButtonText: "No",
+                            closeOnConfirm: true
+                        }, function () {
+                            window.location.href = '@Url.Action("Carrito", "Tienda")'
+                        })
+                    } else {
+                        swal("", data.mensaje, "warning");
                     }
+                }
             });
 
         })

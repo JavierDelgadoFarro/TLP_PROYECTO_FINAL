@@ -79,8 +79,8 @@ namespace CapaPresentacionCliente.Controllers
         [HttpPost]
         public JsonResult AgregarCarrito(int idproducto)
         {
-            int idCliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
-            bool existe = new Negocio_Carrito().ExistCarrito(idCliente, idproducto);
+            int idcliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
+            bool existe = new Negocio_Carrito().ExistCarrito(idcliente, idproducto);
 
             bool respuesta = false;
             string mensaje = string.Empty;
@@ -90,7 +90,7 @@ namespace CapaPresentacionCliente.Controllers
             }
             else
             {
-                respuesta = new Negocio_Carrito().OperacionCarrito(idCliente, idproducto, true, out mensaje);
+                respuesta = new Negocio_Carrito().OperacionCarrito(idcliente, idproducto, true, out mensaje);
             }
             return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
@@ -98,10 +98,58 @@ namespace CapaPresentacionCliente.Controllers
         [HttpGet]
         public JsonResult CantidadEnCarrito()
         {
-            int idCliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
-            int cantidad = new Negocio_Carrito().CantidadEnCarrito(idCliente);
-            return Json(new { cantidad = cantidad }, JsonRequestBehavior.AllowGet);
+            int idcliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
+            int cantidad = new Negocio_Carrito().CantidadEnCarrito(idcliente);
+            return Json(new { Car_cantidad = cantidad }, JsonRequestBehavior.AllowGet);
 
+        }
+        [HttpPost]
+        public JsonResult ListarProductosCarrito()
+        {
+            int idcliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
+            List<Entidad_Carrito> oLista = new List<Entidad_Carrito>();
+            bool conversion;
+            oLista = new Negocio_Carrito().ListarProducto(idcliente).Select(oc => new Entidad_Carrito()
+            {
+                oProducto = new Entidad_Producto()
+                {
+                    idProducto = oc.oProducto.idProducto,
+                    Prod_nombre = oc.oProducto.Prod_nombre,
+                    oMarca = oc.oProducto.oMarca,
+                    Prod_precio = oc.oProducto.Prod_precio,
+                    Prod_rutaImagen = oc.oProducto.Prod_rutaImagen,
+                    Base64 = CN_Recursos.ConvertirBase64(Path.Combine(oc.oProducto.Prod_rutaImagen, oc.oProducto.Prod_nombreImagen), out conversion),
+                    Extension = Path.GetExtension(oc.oProducto.Prod_nombreImagen)
+                },
+                Car_cantidad = oc.Car_cantidad
+            }).ToList();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult OperacionCarrito(int idproducto, bool sumar)
+        {
+            int idcliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
+
+            bool respuesta = false;
+            string mensaje = string.Empty;
+            respuesta = new Negocio_Carrito().OperacionCarrito(idcliente, idproducto, true, out mensaje);
+            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult EliminarCarrito(int idproducto)
+        {
+            int idcliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
+
+            bool respuesta = false;
+            string mensaje = string.Empty;
+            respuesta = new Negocio_Carrito().EliminarCarrito(idcliente, idproducto);
+            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult Carrito()
+        {
+            return View();
         }
     }
 }
