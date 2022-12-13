@@ -13,6 +13,7 @@ namespace CapaEntidad
         public Entidad_Cliente idCliente { get; set; }
 
         public Entidad_Producto idProducto { get; set; }
+        public Entidad_Producto oProducto { get; set; }
 
         public int Car_cantidad { get; set; }
     }
