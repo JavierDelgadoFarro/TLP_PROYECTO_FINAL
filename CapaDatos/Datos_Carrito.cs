@@ -19,9 +19,9 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("SP_ExisteCarrito", oconexion);
-                    cmd.Parameters.AddWithValue("@IdCliente", idcliente);
-                    cmd.Parameters.AddWithValue("@IdProducto", idproducto);
-                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("IdCliente", idcliente);
+                    cmd.Parameters.AddWithValue("IdProducto", idproducto);
+                    cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
                     oconexion.Open();
                     cmd.ExecuteNonQuery();
@@ -45,9 +45,9 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("SP_OperacionCarrito", oconexion);
-                    cmd.Parameters.AddWithValue("@IdCliente", idcliente);
-                    cmd.Parameters.AddWithValue("@IdProducto", idproducto);
-                    cmd.Parameters.AddWithValue("@Sumar", sumar);
+                    cmd.Parameters.AddWithValue("IdCliente", idcliente);
+                    cmd.Parameters.AddWithValue("IdProducto", idproducto);
+                    cmd.Parameters.AddWithValue("Sumar", sumar);
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -73,8 +73,8 @@ namespace CapaDatos
             {
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("SELECT COUNT (*) FROM Carrito WHERE Car_idCliente =@idCliente", oconexion);
-                    cmd.Parameters.AddWithValue("@idCliente", idcliente);
+                    SqlCommand cmd = new SqlCommand("SELECT COUNT (*) FROM Carrito WHERE Car_idCliente =idcliente", oconexion);
+                    cmd.Parameters.AddWithValue("@idcliente", idcliente);
                     cmd.CommandType = CommandType.Text;
                     oconexion.Open();
                     resultado = Convert.ToInt32(cmd.ExecuteScalar());

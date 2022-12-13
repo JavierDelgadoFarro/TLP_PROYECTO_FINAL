@@ -79,8 +79,8 @@ namespace CapaPresentacionCliente.Controllers
         [HttpPost]
         public JsonResult AgregarCarrito(int idproducto)
         {
-            int idCliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
-            bool existe = new Negocio_Carrito().ExistCarrito(idCliente, idproducto);
+            int idcliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
+            bool existe = new Negocio_Carrito().ExistCarrito(idcliente, idproducto);
 
             bool respuesta = false;
             string mensaje = string.Empty;
@@ -90,7 +90,7 @@ namespace CapaPresentacionCliente.Controllers
             }
             else
             {
-                respuesta = new Negocio_Carrito().OperacionCarrito(idCliente, idproducto, true, out mensaje);
+                respuesta = new Negocio_Carrito().OperacionCarrito(idcliente, idproducto, true, out mensaje);
             }
             return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
@@ -98,8 +98,8 @@ namespace CapaPresentacionCliente.Controllers
         [HttpGet]
         public JsonResult CantidadEnCarrito()
         {
-            int idCliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
-            int cantidad = new Negocio_Carrito().CantidadEnCarrito(idCliente);
+            int idcliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
+            int cantidad = new Negocio_Carrito().CantidadEnCarrito(idcliente);
             return Json(new { cantidad = cantidad }, JsonRequestBehavior.AllowGet);
 
         }

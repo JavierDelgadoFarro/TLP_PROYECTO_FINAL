@@ -491,19 +491,18 @@ END
 
 /******************VERIFICACION DE PRODUCTO EN CARRITO*************************************/
 
-CREATE PROC SP_ExisteCarrito(
+ALTER PROC SP_ExisteCarrito(
 @IdCliente int,
 @IdProducto int,
 @Resultado BIT OUTPUT
 )
 AS
 BEGIN
-	IF EXISTS (SELECT * FROM Carrito WHERE idCarrito = @IdCliente AND Car_idProducto = @IdProducto)
+	IF EXISTS (SELECT * FROM Carrito WHERE Car_idCliente = @IdCliente AND Car_idProducto = @IdProducto)
 			SET @Resultado = 1
 	ELSE
 		SET @Resultado = 0
 END
-
 
 
 /*AÑADIR AL CARRITO/*
@@ -526,12 +525,12 @@ BEGIN
 	BEGIN TRY
 
 	BEGIN TRANSACTION OPERACION
-		IF ( @Sumar =1)
+		IF (@Sumar = 1)
 		BEGIN 
 			IF (@stockproducto > 0)
 				BEGIN
 				IF (@existecarrito = 1)
-					UPDATE carrito SET Car_cantidad = Car_cantidad +1 WHERE Car_idCliente = @IdCliente AND Car_idProducto = Car_idProducto
+					UPDATE carrito SET Car_cantidad = Car_cantidad +1 WHERE Car_idCliente = @IdCliente AND Car_idProducto = @IdProducto
 				ELSE
 					INSERT INTO Carrito(Car_idCliente, Car_idProducto, Car_cantidad) VALUES (@IdCliente, @IdProducto, 1)
 				UPDATE Producto SET Prod_stock = Prod_stock -1 WHERE idProducto = @IdProducto
@@ -555,3 +554,42 @@ BEGIN
 		ROLLBACK TRANSACTION OPERACION
 	END CATCH
 END
+
+
+
+
+CREATE PROC SP_eliminarCarrito(
+@IdCliente int,
+@IdProducto int,
+@Resultado bit output
+)
+AS
+BEGIN
+	SET @Resultado =1
+	DECLARE @cantidadproducto int = (select Car_cantidad from Carrito where Car_idCliente = @IdCliente AND Car_idProducto = @IdProducto)
+	BEGIN TRY
+		BEGIN TRANSACTION OPERACION
+		UPDATE Producto SET Prod_stock = Prod_stock + @cantidadproducto WHERE idProducto = @IdProducto
+		DELETE TOP (1) FROM Carrito WHERE Car_idCliente = @IdCliente AND Car_idProducto = @IdProducto
+		COMMIT TRANSACTION OPERACION
+	END TRY
+	BEGIN CATCH
+		SET @Resultado =0
+		ROLLBACK TRANSACTION OPERACION
+	END CATCH
+END
+
+
+
+CREATE FUNCTION Fn_ObtenerCarritoCliente(
+@idcliente int
+)
+returns table
+AS
+RETURN(
+	SELECT  p.idProducto, m.Mar_descripcion[DesMarca], p.Prod_nombre, p.Prod_precio, c.Car_cantidad, p.Prod_rutaImagen, p.Prod_nombreImagen
+	FROM Carrito C
+	INNER JOIN Producto P  ON P.idProducto = c.Car_idProducto
+	INNER JOIN Marca M ON M.idMarca = p.Prod_idMarca
+	WHERE c.Car_idCliente = @idcliente
+)
