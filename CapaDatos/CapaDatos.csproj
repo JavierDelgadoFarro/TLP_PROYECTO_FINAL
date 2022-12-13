@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Conexion.cs" />
+    <Compile Include="Datos_Carrito.cs" />
     <Compile Include="Datos_Categoria.cs" />
     <Compile Include="Datos_Cliente.cs" />
     <Compile Include="Datos_Marca.cs" />

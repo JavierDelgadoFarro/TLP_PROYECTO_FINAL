@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CN_Recursos.cs" />
+    <Compile Include="Negocio_Carrito.cs" />
     <Compile Include="Negocio_Categoria.cs" />
     <Compile Include="Negocio_Cliente.cs" />
     <Compile Include="Negocio_Marca.cs" />

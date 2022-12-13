@@ -1,11 +1,8 @@
 ﻿using CapaEntidad;
 using CapaNegocio;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Mvc;
 
 namespace CapaPresentacionCliente.Controllers
@@ -103,7 +100,8 @@ namespace CapaPresentacionCliente.Controllers
         {
             int idCliente = ((Entidad_Cliente)Session["Cliente"]).idCliente;
             int cantidad = new Negocio_Carrito().CantidadEnCarrito(idCliente);
-            return Json(new {cantidad = cantidad }, JsonRequestBehavior.AllowGet);
+            return Json(new { cantidad = cantidad }, JsonRequestBehavior.AllowGet);
 
         }
+    }
 }
