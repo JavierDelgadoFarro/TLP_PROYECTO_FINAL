@@ -128,5 +128,39 @@ namespace CapaDatos
             }
             return resultado;
         }
+
+        public List<Entidad_Marca> ListarMarcaporCategoria(int idcategoria)
+        {
+
+            List<Entidad_Marca> lista = new List<Entidad_Marca>();
+
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("SP_ListarMarcaCategoria", oconexion);
+                    cmd.Parameters.AddWithValue("@idCategoria", idcategoria);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oconexion.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new Entidad_Marca()
+                            {
+                                idMarca = Convert.ToInt32(dr["IdMarca"]),
+                                Mar_descripcion = dr["Descripcion"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                lista = new List<Entidad_Marca>();
+            }
+            return lista;
+        }
     }
 }

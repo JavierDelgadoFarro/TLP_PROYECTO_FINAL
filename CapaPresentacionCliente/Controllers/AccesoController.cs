@@ -55,7 +55,6 @@ namespace CapaPresentacionCliente.Controllers
                 ViewBag.Error = mensaje;
                 return View();
             }
-
         }
 
 
@@ -70,7 +69,6 @@ namespace CapaPresentacionCliente.Controllers
             {
                 ViewBag.Error = "Correo o contraseña no son correctas";
                 return View();
-
             }
             else
             {
@@ -78,14 +76,11 @@ namespace CapaPresentacionCliente.Controllers
                 {
                     TempData["idCliente"] = oCliente.idCliente;
                     return RedirectToAction("CambiarClave", "Acceso");
-
                 }
                 else
                 {
                     FormsAuthentication.SetAuthCookie(oCliente.Cli_correo, false);
-
                     Session["Cliente"] = oCliente;
-
                     ViewBag.Error = null;
                     return RedirectToAction("Index", "Tienda");
                 }
@@ -137,6 +132,7 @@ namespace CapaPresentacionCliente.Controllers
 
         public ActionResult CerrarSesion()
         {
+            Session["Cliente"] = null;
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Acceso");
 
