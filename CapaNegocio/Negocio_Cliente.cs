@@ -37,7 +37,7 @@ namespace CapaNegocio
 
             if (string.IsNullOrEmpty(Mensaje))
             {
-                obj.Cli_password = CN_Recursos.ConvertirSha256(obj.Cli_nombres);
+                obj.Cli_password = CN_Recursos.ConvertirSha256(obj.Cli_password);
                 return objCapaDato.Registrar(obj, out Mensaje);
             }
             else

@@ -21,10 +21,10 @@ namespace CapaDatos
                 using (SqlConnection oconexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("SP_RegistrarCliente", oconexion);
-                    cmd.Parameters.AddWithValue("@nombres", obj.Cli_nombres);
-                    cmd.Parameters.AddWithValue("@apellidos", obj.Cli_apellidos);
-                    cmd.Parameters.AddWithValue("@correo", obj.Cli_correo);
-                    cmd.Parameters.AddWithValue("@clave", obj.Cli_password);
+                    cmd.Parameters.AddWithValue("@Nombres", obj.Cli_nombres);
+                    cmd.Parameters.AddWithValue("@Apellido", obj.Cli_apellidos);
+                    cmd.Parameters.AddWithValue("@Correo", obj.Cli_correo);
+                    cmd.Parameters.AddWithValue("@Clave", obj.Cli_password);
                     cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 200).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -151,12 +151,12 @@ namespace CapaDatos
                     SqlCommand cmd = new SqlCommand("SP_CambiarClave_Cliente", oconexion);
                     cmd.Parameters.AddWithValue("@id", idCliente);
                     cmd.Parameters.AddWithValue("@nuevaclave", nuevaclave);
-                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
                     cmd.CommandType = CommandType.StoredProcedure;
                     oconexion.Open();
                     cmd.ExecuteNonQuery();
-                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                    resultado = Convert.ToBoolean(cmd.Parameters["resultado"].Value);
                     Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
                 }
             }
