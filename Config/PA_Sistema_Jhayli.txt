@@ -341,17 +341,28 @@ UPDATE Producto SET Prod_rutaImagen= @Rutaimagen, Prod_nombreImagen= @Nombreimag
 WHERE idProducto = @IdProducto
 END
 
-/******************REPORTE COUNT DE CLIENTES VENTAS Y PRODUCTOS*************************************/
 
-CREATE PROCEDURE SP_ReporteDashboard
+
+/******************REPORTE VENTAS*************************************/
+ALTER PROC [dbo].[SP_ReporteVentas](
+@fechainicio varchar(10),
+@fechafin varchar(10),
+@Idtransaccion varchar(50)
+)
 AS
 BEGIN
-SELECT
-	(SELECT COUNT(*) FROM cliente)[TotalCliente],
-	(SELECT ISNULL(sum(DV_Cantidad),0) from DetalleVenta) [TotalVenta],
-	(SELECT COUNT (*) FROM PRODUCTO)[TotalProducto]
+	set dateformat dmy;
+
+SELECT CONVERT(char(10),v.Ven_fechaVenta,103)[FechaVenta],CONCAT (c.Cli_nombres,' ',c.Cli_apellidos)[Cliente],
+p.Prod_nombre[Producto], p.Prod_precio,dv.DV_Cantidad,dv.DV_Total,v.idTransaccion
+FROM DetalleVenta dv 
+INNER JOIN Producto p on p.idProducto=dv.idProducto
+INNER JOIN venta v on v.idVenta=dv.idVenta
+INNER JOIN Cliente c on c.idCliente=v.idCliente
+
+WHERE CONVERT(date,v.Ven_fechaVenta) BETWEEN @fechainicio AND @fechafin
+AND v.idTransaccion = iif(@Idtransaccion = '', v.idTransaccion,@Idtransaccion)
 END
-EXEC SP_ReporteDashboard
 
 /******************CAMBIAR CONTRASEÑA*************************************/
 
@@ -388,7 +399,7 @@ BEGIN
 	IF NOT EXISTS (SELECT*FROM Cliente WHERE Cli_correo = @Correo)
 	BEGIN
 		INSERT INTO Cliente(Cli_nombres, Cli_apellidos, Cli_correo, Cli_password, Cli_reestablecer) values
-		(@Nombres, @Apellido, @Correo, @Clave, 0)
+		(@Nombres, @Apellido, @Correo, @Clave, 1)
 		SET @Resultado = SCOPE_IDENTITY()
 	END
 	ELSE
@@ -448,4 +459,32 @@ BEGIN
 		DELETE TOP (1) FROM Usuario WHERE @IdCliente = @IdCliente
 		SET @Resultado =1
 	END
+END
+
+---------------------nuevos
+
+/******************REPORTE COUNT DE CLIENTES VENTAS Y PRODUCTOS (volver a correr)*************************************/
+
+CREATE PROCEDURE SP_ReporteDashboard
+AS
+BEGIN
+SELECT
+	(SELECT COUNT(*) FROM cliente)[TotalCliente],
+	(SELECT ISNULL(sum(DV_Cantidad),0) from DetalleVenta) [TotalVenta],
+	(SELECT COUNT (*) FROM PRODUCTO WHERE Producto.Prod_estado = 1)[TotalProducto] 
+END
+
+/******************LISTAR CLIENTE*************************************/
+
+
+CREATE PROCEDURE SP_ListarMarcaCategoria(
+ @idCategoria INT
+)
+AS
+BEGIN
+
+SELECT DISTINCT m.idMarca, m.Mar_descripcion from Producto P
+INNER JOIN Categoria C ON C.idCategoria = P.Prod_idCategoria
+INNER JOIN Marca M ON M.idMarca = P.Prod_idMarca AND m.Mar_estado=1
+WHERE C.idCategoria = IIF(@idCategoria = 0, C.idCategoria, @idCategoria)
 END
