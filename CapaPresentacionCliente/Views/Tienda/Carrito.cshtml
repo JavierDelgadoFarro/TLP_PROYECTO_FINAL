@@ -10,6 +10,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
+                        <!--Detalle Producto-->
                         <div class="col-sm-9">
                             <div class="me-2">
                                 <div class="d-flex justify-content-between">
@@ -18,26 +19,23 @@
                                         <i class="fas fa-cart-plus"></i> Seguir Comprando
                                     </a>
                                 </div>
-                                <hr class="mt-2 mb-2"/>
-                                <div class="productos-carrito">
+                                <hr class="mt-2 mb-2" />
+                                <div id="productos-carrito">
                                     <div class="card mb-2 card-producto">
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-sm-2 align-self-center d-flex justify-content-center">
-                                                    <img src="" alt="" />
+                                                    <img class="rounded" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" style="width:100px; height:100px" />
                                                 </div>
                                                 <div class="col-sm-4 align-self-center">
                                                     <span class="font-wight-bold d-block">Marca</span>
                                                     <span>Nombre Producto</span>
                                                 </div>
                                                 <div class="col-sm-2 align-self-center">
-
                                                     <span>Precio : S/. 1500</span>
                                                 </div>
                                                 <div class="col-sm-2 align-self-center">
                                                     <div class="d-flex">
-
-
                                                         <button class="btn btn-outline-secondary btn-restar rounded-0">
                                                             <i class="fas fa-minus"></i>
                                                         </button>
@@ -48,14 +46,16 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2 align-self-center">
-                                                    <button class="btn btn-outline-danger btn-eliminar rounded-0">
-                                                        <i class="fas fa-trash-alt"></i> Eliminar
-                                                    </button>     
+                                                    <button class="btn btn-outline-danger btn-eliminar"><i class="fas fa-trash-alt"></i> Eliminar</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="d-flex justify-content-end">
+                                    <label class="align-self-center"><b>Total: S/.<span id="total">500</span></b></label>
+                                </div>
+
                             </div>
                         </div>
                         <div class="col-sm-3">
@@ -103,24 +103,164 @@
                 success: function (response) {
                     $("#productos-carrito").html("");
                     $("#productos-carrito").LoadingOverlay("hide");
-                    $each(response.data, function (i, item) {
+                    $.each(response.data, function (i, item) {
 
                         $("<div>").addClass("card mb-2 card-producto").append(
                             $("<div>").addClass("card-body").append(
-                                $("<div>").addClass("col-sm-2 alugn-self-center d-flex justify-content-center").append(
-                                    $("<img>")
+                                $("<div>").addClass("row").append(
+
+                                    //1
+                                    $("<div>").addClass("col-sm-2 align-self-center d-flex justify-content-center").append(
+                                        $("<img>").addClass("rounded").attr({
+                                            "src": "data:image/" + item.oProducto.Extension + ";base64," + item.oProducto.Base64
+                                        }).css({ "width": "100px", "height": "100px" })
+                                    ),
+
+                                    //2
+                                    $("<div>").addClass("col-sm-4 align-self-center").append(
+                                        $("<span>").addClass("font-wight-bold d-block").text(item.oProducto.oMarca.Mar_descripcion),
+                                        $("<span>").text(item.oProducto.Prod_nombre)
+                                    ),
+                                    //3
+                                    $("<div>").addClass("col-sm-2 align-self-center").append(
+                                        $("<span>").text(item.oProducto.Prod_precio.toFixed(2) + "PEN")
+                                    ),
+                                    //4
+                                    $("<div>").addClass("col-sm-2 align-self-center").append(
+                                        $("<div>").addClass("d-flex").append(
+                                            $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")),
+                                            $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" }).css({ "width": "40px" }).data("oProducto", item.oProducto).val(item.Car_cantidad),
+                                            $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus")),
+
+                                        )
+                                    ),
+                                    //5
+                                    $("<div>").addClass("col-sm-2 align-self-center").append(
+                                        $("<button>").addClass("btn btn-outline-danger btn-eliminar rounded-0").append($("<i>").addClass("fas fa-trash-alt"), "Eliminar").data("idProducto",item.oProducto.idProducto),
+
+                                    )
                                 )
                             )
 
                         ).appendTo("#productos-carrito")
                     })
+                    sumarTotal();
+
+                },
+                error: function (error) {
+                    $("#productos-carrito").LoadingOverlay("hide");
+                },
+                beforeSend: function () {
+                    $("#productos-carrito").LoadingOverlay("show");
+                },
+            })
+        })
+
+        function sumarTotal() {
+            var sumaTotal = parseFloat(0)
+            $("input.input-cantidad").each(function (i) {
+                var precio = $(this).data("oProducto").Prod_precio;
+                var cantidad = parseFloat($(this).val())
+                var subtotal = precio * cantidad;
+                sumaTotal += subtotal;
+            })
+            $("#total").text(sumaTotal.toFixed(2))
+            $("#total").data("sumaTotal", sumaTotal)
+        }
+
+        $(document).on("click", ".btn-sumar", function () {
+            var div_contenedor = $(this).parent("div.d-flex");
+            var input_cantidad = $(div_contenedor).find("input.input-cantidad");
+            var btn = $(this)
+            var idproducto = $(input_cantidad).data("oProducto").idProducto;
+
+            jQuery.ajax({
+                url: '@Url.Action("OperacionCarrito", "Tienda")',
+                type: "POST",
+                data: JSON.stringify({ idproducto: idproducto,  sumar: true }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $(btn).LoadingOverlay("hide")
+                    if (data.respuesta) {
+                        var cantidad = parseInt($(input_cantidad).val()) + 1;
+                        $(input_cantidad).val(cantidad)
+                        sumarTotal()
+                    } else {
+                        swal("",data.mensaje, "warning")
+                    }
+
+                },
+                beforeSend: function () {
+                    $(btn).LoadingOverlay("show")
+                },
+                error: function (error) {
+                    $(btn).LoadingOverlay("hide")
+                }
+            })
+        })
+
+        $(document).on("click", ".btn-restar", function () {
+            var div_contenedor = $(this).parent("div.d-flex");
+            var input_cantidad = $(div_contenedor).find("input.input-cantidad");
+            var btn = $(this)
+            var idproducto = $(input_cantidad).data("oProducto").idProducto;
+            var cantidad = parseInt($(input_cantidad).val()) - 1;
+
+            if (cantidad >= 1) {
+                jQuery.ajax({
+                    url: '@Url.Action("OperacionCarrito", "Tienda")',
+                    type: "POST",
+                    data: JSON.stringify({ idproducto: idproducto,  sumar: false }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $(btn).LoadingOverlay("hide")
+                        if (data.respuesta) {
+                            $(input_cantidad).val(cantidad)
+                            sumarTotal()
+                        } else {
+                            swal("",data.mensaje, "warning")
+                        }
+
+                    },
+                    beforeSend: function () {
+                        $(btn).LoadingOverlay("show")
+                    },
+                    error: function (error) {
+                        $(btn).LoadingOverlay("hide")
+                    }
+                })
+            }
+
+
+        })
+
+        $(document).on("click", ".btn-eliminar", function () {
+            var idproducto = $(this).data("idProducto");
+            var card_producto = $(this).parents("div.card-producto");
+ 
+            jQuery.ajax({
+                url: '@Url.Action("EliminarCarrito", "Tienda")',
+                type: "POST",
+                data: JSON.stringify({ idproducto: idproducto }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    
+                    if (data.respuesta) {
+                        card_producto.remove();
+                        MostrarCantidadCarrito();
+                        sumarTotal();
+
+                    } else {
+                        swal("",data.mensaje, "warning")
+                    }
 
                 }
             })
         })
 
     </script>
-    
-    
-    
-    }
+
+}

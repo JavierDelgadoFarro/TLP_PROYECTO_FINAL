@@ -75,6 +75,7 @@
     <Compile Include="Negocio_Producto.cs" />
     <Compile Include="Negocio_Reporte.cs" />
     <Compile Include="Negocio_Usuario.cs" />
+    <Compile Include="Negocio_Venta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -18,8 +18,6 @@ namespace CapaEntidad
 
         public string Ven_contacto { get; set; }
 
-        public int idDistrito { get; set; }
-
         public string Ven_telefono { get; set; }
 
         public string Ven_direccion { get; set; }

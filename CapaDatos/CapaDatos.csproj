@@ -76,6 +76,7 @@
     <Compile Include="Datos_Producto.cs" />
     <Compile Include="Datos_Reporte.cs" />
     <Compile Include="Datos_Usuario.cs" />
+    <Compile Include="Datos_Venta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
